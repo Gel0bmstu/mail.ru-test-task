@@ -1,0 +1,67 @@
+@import './templates.scss';
+
+body {
+    font-family: $font-family;
+    color: $normal-text-color;
+    font-size: $font-size;
+}
+
+#7::shadow .phone-module {
+    display: flex;
+    flex-wrap: wrap;
+
+    width: 370px;
+    height: 50px;
+
+    justify-content: space-around;
+}
+
+#7::shadow .phone-module__number-section {
+    display: flex;
+    flex-wrap: wrap;
+
+    width: 100%;
+    height: 35px;
+
+    justify-content: space-around;
+}
+
+#7::shadow .phone-module__error-section {
+    width: 100%;
+
+    text-align: left;
+    font-size: 14px;
+    font-family: $font-family;
+    color: $error-text-color;
+}
+
+#7::shadow .phone-module__number-section-symbol {
+    @extend %template-symbol;
+}
+
+#7::shadow .phone-module__number-section-cell {
+    @extend %template-cell;
+}
+
+.phone-module__number-section-input {
+    @extend %template-input;
+}
+
+.phone-module__number-section-input-error {
+    @extend %template-input;
+
+    border-color: $error-cell-border-color;
+}
+
+.phone-module__error-section-input-success {
+    @extend %template-input;
+
+    border-color: $success-cell-border-color;
+}
+
+.phone-module__number-section-input:focus {
+    border: 1px solid $active-cell-border-color;
+    border-radius: 2px;
+
+    transition: 0.1s linear;
+}

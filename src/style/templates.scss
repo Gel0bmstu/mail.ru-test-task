@@ -1,0 +1,69 @@
+// Module
+$module-background_color: #ffffff;
+
+// Cell
+$cell-background-color: #f0f0f0;
+$normal-cell-border-color: $cell-background-color;
+$active-cell-border-color: #858585;
+$error-cell-border-color: #ff1100;
+$success-cell-border-color: #00ff6a;
+
+// Text
+$normal-text-color: #333333;
+$placeholder_underscore_color: #999999;
+$error-text-color: $error-cell-border-color;
+$font-size: 20px;
+$font-family: Arial, Helvetica, sans-serif;
+
+// Templates
+%template-cell {
+    width: 25px;
+    height: 32px;
+
+    text-align: center;
+    line-height: 32px;
+
+    background-color: $cell-background-color;
+
+    margin: 2px;
+    border-radius: 2px;
+}
+
+%template-symbol {
+    text-align: center;
+    line-height: 32px;
+
+    width: 10px;
+    height: 32px;
+
+    border: none;
+}
+
+%template-input {
+    text-align: left;
+    line-height: 32px;
+
+    width: 16px;
+    height: 28px;
+
+    margin: 2px;
+    padding-left: 7px;
+
+    font-family: $font-family;
+    color: $normal-text-color;
+    font-size: $font-size;
+
+    background-color: $module-background_color;
+
+    outline: none;
+
+    border: 1px solid $normal-cell-border-color;
+    border-radius: 2px;
+
+    transition: 0.1s linear;
+}
+
+%template-input::placeholder {
+    color: $placeholder_underscore_color;
+    font-size: 15px;
+}
