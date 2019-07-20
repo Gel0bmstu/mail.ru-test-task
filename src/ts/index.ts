@@ -198,7 +198,7 @@ class phoneValidationComponent extends HTMLElement {
             console.log("root", this.shadowRoot, "elem", this._numberSection);
         }
     }
-    set setMask(prop) {
+    set setMask(prop : Props) {
         this._mask = prop.mask;
         console.log("step1");
         this.logic();
@@ -211,7 +211,7 @@ customElements.define("phone-validation", phoneValidationComponent);
 var a = <phoneValidationComponent>document.getElementById('7');
 if (a) {
     let p = {
-        _mask: '+7(985)0II-**-**'
+        mask: '+7(985)0II-**-**'
     };
     a.setMask = p;
     console.log('wtf');
