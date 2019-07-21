@@ -2,3 +2,8 @@ sudo npm i -g webpack;
 sudo npm i -g webpack-cli;
 sudo npm install awesome-typescript-loader --save-dev
 sudo npm install style-loader css-loader sass-loader node-sass -D
+sudo npm i -D mocha
+sudo npm i @types/mocha -D
+sudo npm i -D chai
+sudo npm i @types/chai -D
+

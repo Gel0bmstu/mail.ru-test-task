@@ -1,22 +1,21 @@
 @import './templates.scss';
 
-body {
-    font-family: $font-family;
-    color: $normal-text-color;
-    font-size: $font-size;
-}
 
-#7::shadow .phone-module {
+.phone-module {
     display: flex;
     flex-wrap: wrap;
 
     width: 370px;
     height: 50px;
 
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333333;
+    font-size: 20px;
+
     justify-content: space-around;
 }
 
-#7::shadow .phone-module__number-section {
+.phone-module__number-section {
     display: flex;
     flex-wrap: wrap;
 
@@ -26,36 +25,67 @@ body {
     justify-content: space-around;
 }
 
-#7::shadow .phone-module__error-section {
+.phone-module__error-section {
     width: 100%;
 
     text-align: left;
     font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #ff1100;
+}
+
+.phone-module__number-section-symbol {
+    text-align: center;
+    line-height: 32px;
+
+    width: 10px;
+    height: 32px;
+
+    border: none;
+}
+
+.phone-module__number-section-cell {
+    width: 25px;
+    height: 32px;
+
+    text-align: center;
+    line-height: 32px;
+
+    background-color: $cell-background-color;
+
+    margin: 2px;
+    border-radius: 2px;
+}
+
+.phone-module__number-section-input .phone-module__number-section-input-error .phone-module__error-section-input-success {
+    text-align: left;
+    line-height: 32px;
+
+    width: 16px;
+    height: 28px;
+
+    margin: 2px;
+    padding-left: 7px;
+
     font-family: $font-family;
-    color: $error-text-color;
-}
+    color: $normal-text-color;
+    font-size: $font-size;
 
-#7::shadow .phone-module__number-section-symbol {
-    @extend %template-symbol;
-}
+    background-color: $module-background_color;
 
-#7::shadow .phone-module__number-section-cell {
-    @extend %template-cell;
-}
+    outline: none;
 
-.phone-module__number-section-input {
-    @extend %template-input;
+    border: 1px solid $normal-cell-border-color;
+    border-radius: 2px;
+
+    transition: 0.1s linear;
 }
 
 .phone-module__number-section-input-error {
-    @extend %template-input;
-
     border-color: $error-cell-border-color;
 }
 
 .phone-module__error-section-input-success {
-    @extend %template-input;
-
     border-color: $success-cell-border-color;
 }
 
