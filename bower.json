@@ -1,0 +1,17 @@
+{
+  "name": "mail.ru-test-task",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "gel0"
+  ],
+  "license": "OSI",
+  "homepage": "https://github.com/Gel0bmstu/mail.ru-test-task",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
