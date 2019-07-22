@@ -1,4 +1,5 @@
 import { Props } from './mask';
+// import NetworkHandler from './NetworkHandler';
 
 export class PhoneValidationComponent extends HTMLElement {
     
@@ -10,12 +11,14 @@ export class PhoneValidationComponent extends HTMLElement {
 
     // --------------------------------------------------
     // Данные поля нужны только для теста
-    private _correctNumber : string = '+7(985)077-**-**';
+    private _correctNumber : string = '+X(XXX)XXX-XX-XX';
     private _inputsMaskArr : number[] = [];
     private _inputsPrevValues : string[] = [];
 
     // --------------------------------------------------
 
+    // Div, главный
+    private _mainDiv! : HTMLDivElement;
     // Div, в котором помещается номер и инпуты
     private _numberSection! : HTMLDivElement;
     // Div, в котором принтится ошибка
@@ -26,12 +29,17 @@ export class PhoneValidationComponent extends HTMLElement {
     // Массив инпутов
     private _inputsArr : HTMLInputElement[];
 
-    // Текущее состояние компонента
-    private _state : string;
+    // Способ валидации номера (обраблтка входных/выходных данных)
+    private _mode : string;
+    private _path : string;
+    // private _networkHandler : NetworkHandler;
+
+    private _width : number;
 
     constructor() {
         super();
 
+        console.log('constructor');
         // Задаем шаблон, в который будет помещен валидируемый номер
         // Для простоты укажем стили внутри шаблона
         this._template = `
@@ -146,20 +154,25 @@ export class PhoneValidationComponent extends HTMLElement {
 
         this.attachShadow({ mode: "open" });
 
+        this._width = 0;
         this._inputsKol = 0;
         this._inputsArr = [];
-        this._state = 'none';
+        this._mode = 'fetch';
+        this._path = 'http://localhost:3000/api/fetch';
+
+        // this._networkHandler = new NetworkHandler();
 
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = this._template;
+            this._mainDiv = this.shadowRoot.querySelector('.phone-module') as HTMLDivElement;            
             this._numberSection = this.shadowRoot.querySelector('.phone-module__number-section') as HTMLDivElement;
             this._errorSection = this.shadowRoot.querySelector('.phone-module__error-section') as HTMLDivElement;
         }
 
-        this.logic();
+        // this.logic();
     }
 
-    public performValidation() : void {
+    public performValidation() : void | string {
         this._errorSection.innerHTML = '';
 
         let errCheck : boolean = false;
@@ -167,9 +180,32 @@ export class PhoneValidationComponent extends HTMLElement {
         if (this._errorSection) {
 
             this._errorSection.textContent = '';
-            
+
+
+    //     let body : string = '';
+    //     const that = this;
+    //     for (let i = 0; i < this._inputsKol; i++) {
+    //         body += this._inputsArr[i].value;
+    //     }
+
+    //     const req = JSON.stringify({
+    //         'result' : body,
+    //     });
+
+    //     if (this._path === '') {
+    //         this._errorSection.textContent = 'Извините, произошла ошибка сервера'
+    //         console.error('Неверно указан путь до эндпоинта!');
+    //     } else {
+    //         this._networkHandler.send(
+    //             that._path,
+    //             'POST',
+    //             req,
+    //             (res : object) => {
+    //                 console.log(res);
+    //             }
+    //         );
+    //     }  
             for (let i = 0; i < this._inputsKol; i++) {
-                
                 if (this.shadowRoot) {
                     if (this._inputsArr[i]) {
                         if (this._inputsArr[i].value === '') {
@@ -204,10 +240,30 @@ export class PhoneValidationComponent extends HTMLElement {
             }
         }
     }
+    
+    public setCurrentState(error : boolean, message : string) {
+        if (error) {
+            if (this.shadowRoot && this._errorSection) {
+                this._errorSection.innerText = message;
+
+                for (let i = 0; i < this._inputsKol; i++) {
+                    this._inputsArr[i].className = 'phone-module__number-section-input-error';
+                }
+            }
+        } else {
+            if (this.shadowRoot && this._errorSection) {
+                this._errorSection.innerText = '';
+                for (let i = 0; i < this._inputsKol; i++) {
+                    this._inputsArr[i].className = 'phone-module__error-section-input-success';
+                }
+            }
+        }
+    } 
 
     // Функция заполнения секции номера цифрами номера и инпутами
     private fill() : void {
         this._numberSection.innerHTML = '';
+        this._width = 0;
 
         if (this._numberSection) {
 
@@ -225,6 +281,7 @@ export class PhoneValidationComponent extends HTMLElement {
                         cell.className = 'phone-module__number-section-symbol';
                         cell.innerText = this._mask[i];
                         this._numberSection.appendChild(cell);
+                        this._width += 10;
                         break;
                     }
                     case 'I': {
@@ -239,6 +296,7 @@ export class PhoneValidationComponent extends HTMLElement {
                             const input : HTMLInputElement = this.shadowRoot.getElementById(String(this._inputsKol - 1)) as HTMLInputElement;
                             this._inputsArr.push(input);
                         }
+                        this._width += 29;
                         break;
                     }
                     case '*': {
@@ -247,6 +305,7 @@ export class PhoneValidationComponent extends HTMLElement {
                         cell.innerText = '•';
                         cell.style.fontSize = '25px';
                         this._numberSection.appendChild(cell);
+                        this._width += 29;
                         break;
                     }
                     case 'X': {
@@ -254,6 +313,7 @@ export class PhoneValidationComponent extends HTMLElement {
                         cell.className = 'phone-module__number-section-cell';
                         cell.innerText = this._mask[i];
                         this._numberSection.appendChild(cell);
+                        this._width += 29;
                         break;
                     }
                     default: {
@@ -261,11 +321,14 @@ export class PhoneValidationComponent extends HTMLElement {
                         cell.className = 'phone-module__number-section-cell';
                         cell.innerText = this._mask[i];
                         this._numberSection.appendChild(cell);
+                        this._width += 29;
                         break;
                     }
                 }
             }
         }
+
+        this._mainDiv.style.width = String(this._width + 1) + 'px';
     }
 
     // Подписываемся на событие изменения значения инпута для валидации вводимых
@@ -347,6 +410,22 @@ export class PhoneValidationComponent extends HTMLElement {
         this._correctNumber = corrProp.mask;
     }
 
+    get getAllComponentValues() : string {
+        let result : string = '';
+        
+        if (this._numberSection) {
+            for (let i = 0; i < this._numberSection.children.length; i++) {
+                // if (typeof this._numberSection.children[i]) {
+                    
+                // }
+                console.log(typeof this._numberSection.children[i]);
+            }
+        }
+
+        return result;
+    }
+    
+
     // Возвращаем текущую маску
     get getMask() {
         return this._mask;
@@ -358,8 +437,12 @@ export class PhoneValidationComponent extends HTMLElement {
         return this._inputsKol;
     }
 
-    get getCurrentState() {
-        return this._state;
+    get getCurrentState() : string {
+        if (this._errorSection) {
+            return this._errorSection.innerText;
+        }
+
+        return 'none';
     }
 
     // Возвращаем занчния из инпетов компонета
@@ -377,6 +460,135 @@ export class PhoneValidationComponent extends HTMLElement {
 
         return inputsVals;
     }
+
+    // private createdCallback() {
+    //     this._template = `
+    //     <style>
+    //         .phone-module {
+    //             display: flex;
+    //             flex-wrap: wrap;
+
+    //             width: 370px;
+    //             height: 50px;
+
+    //             font-family: Arial, Helvetica, sans-serif;
+    //             color: #333333;
+    //             font-size: 20px;
+
+    //             justify-content: space-around;
+    //         }
+
+    //         .phone-module__number-section {
+    //             display: flex;
+    //             flex-wrap: wrap;
+
+    //             width: 100%;
+    //             height: 35px;
+
+    //             justify-content: space-around;
+    //         }
+
+    //         .phone-module__error-section {
+    //             width: 100%;
+
+    //             text-align: left;
+    //             font-size: 14px;
+    //             font-family: Arial, Helvetica, sans-serif;
+    //             color: #ff1100;
+    //         }
+
+    //         .phone-module__number-section-symbol {
+    //             text-align: center;
+    //             line-height: 32px;
+
+    //             width: 10px;
+    //             height: 32px;
+
+    //             border: none;
+    //         }
+
+    //         .phone-module__number-section-cell {
+    //             width: 25px;
+    //             height: 32px;
+
+    //             text-align: center;
+    //             line-height: 32px;
+
+    //             background-color: #f0f0f0;
+
+    //             margin: 2px;
+    //             border-radius: 2px;
+    //         }
+
+    //         .phone-module__number-section-input,
+    //         .phone-module__number-section-input-error,
+    //         .phone-module__error-section-input-success {
+    //             text-align: left;
+    //             line-height: 32px;
+
+    //             width: 17px;
+    //             height: 28px;
+
+    //             margin: 2px;
+    //             padding-left: 6px;
+
+    //             font-family: Arial, Helvetica, sans-serif;
+    //             color: #333333;
+    //             font-size: 20px;
+
+    //             background-color: #ffffff;
+
+    //             outline: none;
+
+    //             border: 1px solid #f0f0f0;
+    //             border-radius: 2px;
+
+    //             transition: 0.1s linear;
+    //         }
+
+    //         .phone-module__number-section-input:hover {
+    //             border-color: #c2c2c2;
+    //         }
+
+    //         .phone-module__number-section-input-error {
+    //             border-color: #ff1100;
+    //         }
+
+    //         .phone-module__error-section-input-success {
+    //             border-color: #00ff6a;
+    //         }
+
+    //         .phone-module__number-section-input:focus {
+    //             border: 1px solid #858585;
+    //             border-radius: 2px;
+
+    //             transition: 0.1s linear;
+    //         }
+    //     </style>
+
+    //     <div class="phone-module">
+    //         <div class="phone-module__number-section"></div>
+    //         <div class="phone-module__error-section"></div>
+    //     </div>
+    // `;
+
+    //     console.log('cycle');
+
+
+    //     this.attachShadow({ mode: "open" });
+
+    //     this._inputsKol = 0;
+    //     this._inputsArr = [];
+    //     this._state = 'none';
+
+    //     if (this.shadowRoot) {
+    //         this.shadowRoot.innerHTML = this._template;
+    //         this._numberSection = this.shadowRoot.querySelector('.phone-module__number-section') as HTMLDivElement;
+    //         this._errorSection = this.shadowRoot.querySelector('.phone-module__error-section') as HTMLDivElement;
+    //     }
+
+    //     this.logic();
+    // }
 }
 
 // -----------------------------------------------------------------
@@ -388,5 +600,6 @@ if (a) {
         mask: '+7(985)0II-**-**',
     };
     a.setMask = p;
+    a.getAllComponentValues
 }
 // -----------------------------------------------------------------

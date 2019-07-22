@@ -9,6 +9,12 @@ storiesOf('Button', module)
         const correctP  = {
             mask : '+7(985)077-**-**',
         };
+        const ap1 = {
+            mask:  '+7(985)077-**-**-XX',
+        }
+        const ap2 = {
+            mask: '+3(4572)657-251-**'
+        }
 
         const template = `
             <style>
@@ -33,6 +39,9 @@ storiesOf('Button', module)
             <phone-validation id="6v"></phone-validation>
             <span>success</span>
             <phone-validation id="7v"></phone-validation>
+            <span>different size</span>
+            <phone-validation id="8v"></phone-validation>
+            <phone-validation id="9v"></phone-validation>
             `
 
         document.body.innerHTML = template;
@@ -48,10 +57,16 @@ storiesOf('Button', module)
 
         const success = document.getElementById('7v');
 
+        const diffSize1 = document.getElementById('8v');
+        const diffSize2 = document.getElementById('9v');
+
         [normal, activeEmpty, activeFillFirst, activeFillSecond, emptyErr, validateErr, success].forEach(v => {
             v.setMask = p;
             v.setCorrectMask = correctP;
         })
+
+        diffSize1.setMask = ap1;
+        diffSize2.setMask = ap2;
 
         // const a1 = activeEmpty.shadowRoot.getElementById('0');
         // Устанавляваем курсор на инпут элемента activeEmpty:

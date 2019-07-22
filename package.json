@@ -1,9 +1,10 @@
 {
   "name": "mail.ru-test-task",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "index.js",
     "test": "jasmine-ts --config=jasmine.json",
     "testWithCoverage": "nyc -r lcov -e .ts -x \"*.test.ts\" jasmine-ts --config=jasmine.json && nyc report",
     "storybook": "start-storybook -p 6006",
@@ -11,7 +12,7 @@
   },
   "keywords": [],
   "author": "gel0",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@storybook/html": "^5.1.9",
