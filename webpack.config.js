@@ -24,12 +24,6 @@ module.exports = {
       },
     ]
   },
-  plugins: [
-    new ExtractTextPlugin({
-      filename: 'index.css',
-      allChunks: true,
-    }),
-  ],
   mode: 'production',
 };
 
