@@ -1,20 +1,26 @@
 {
-  "name": "mail.ru_test_task",
+  "name": "mail.ru-test-task",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "jasmine-ts --config=jasmine.json",
-    "testWithCoverage": "nyc -r lcov -e .ts -x \"*.test.ts\" jasmine-ts --config=jasmine.json && nyc report"
+    "testWithCoverage": "nyc -r lcov -e .ts -x \"*.test.ts\" jasmine-ts --config=jasmine.json && nyc report",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "keywords": [],
   "author": "gel0",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@storybook/html": "^5.1.9",
     "@types/jasmine": "^3.3.14",
     "@types/jsdom": "^12.2.4",
     "@types/node": "^12.6.8",
+    "@types/storybook__html": "^5.0.2",
     "awesome-typescript-loader": "^5.2.1",
+    "babel-loader": "^8.0.6",
     "css-loader": "^3.1.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "jasmine": "^3.4.0",
@@ -25,5 +31,6 @@
     "typescript": "^3.5.3",
     "webpack": "^4.36.1",
     "webpack-cli": "^3.3.6"
-  }
+  },
+  "dependencies": {}
 }

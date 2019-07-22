@@ -12,6 +12,8 @@ export class PhoneValidationComponent extends HTMLElement {
     // Данные поля нужны только для теста
     private _correctNumber : string = '+7(985)077-**-**';
     private _inputsMaskArr : number[] = [];
+    private _inputsPrevValues : string[] = [];
+
     // --------------------------------------------------
 
     // Div, в котором помещается номер и инпуты
@@ -24,7 +26,7 @@ export class PhoneValidationComponent extends HTMLElement {
     // Массив инпутов
     private _inputsArr : HTMLInputElement[];
 
-    //Текущее состояние компонента
+    // Текущее состояние компонента
     private _state : string;
 
     constructor() {
@@ -96,8 +98,8 @@ export class PhoneValidationComponent extends HTMLElement {
                     text-align: left;
                     line-height: 32px;
 
-                    width: 25px;
-                    height: 32px;
+                    width: 17px;
+                    height: 28px;
 
                     margin: 2px;
                     padding-left: 6px;
@@ -114,6 +116,10 @@ export class PhoneValidationComponent extends HTMLElement {
                     border-radius: 2px;
 
                     transition: 0.1s linear;
+                }
+
+                .phone-module__number-section-input:hover {
+                    border-color: #c2c2c2;
                 }
 
                 .phone-module__number-section-input-error {
@@ -154,6 +160,8 @@ export class PhoneValidationComponent extends HTMLElement {
     }
 
     public performValidation() : void {
+        this._errorSection.innerHTML = '';
+
         let errCheck : boolean = false;
                     
         if (this._errorSection) {
@@ -199,6 +207,8 @@ export class PhoneValidationComponent extends HTMLElement {
 
     // Функция заполнения секции номера цифрами номера и инпутами
     private fill() : void {
+        this._numberSection.innerHTML = '';
+
         if (this._numberSection) {
 
             this._numberSection.innerHTML = ``;
@@ -222,9 +232,11 @@ export class PhoneValidationComponent extends HTMLElement {
                         cell.className = 'phone-module__number-section-input';
                         cell.id = String(this._inputsKol++);
                         cell.placeholder = '_';
+                        this._inputsMaskArr.push(i);
+                        this._inputsPrevValues.push('');
                         this._numberSection.appendChild(cell);
                         if (this.shadowRoot) {
-                            const input : HTMLInputElement = this.shadowRoot.getElementById(String(this._inputsKol - 1)) as HTMLInputElement
+                            const input : HTMLInputElement = this.shadowRoot.getElementById(String(this._inputsKol - 1)) as HTMLInputElement;
                             this._inputsArr.push(input);
                         }
                         break;
@@ -271,29 +283,31 @@ export class PhoneValidationComponent extends HTMLElement {
                     // Проверяем вводимое пользователем значние, является ли оно числом
                     // (не использую isNaN на parseInt, тк поьователь может ввести значение
                     // как в начало импута, так и в конец)
-                    if (rg.test(this._inputsArr[i].value)) {
-                        if (this._inputsArr[i].value.length > 1) {
-                            this._inputsArr[i].value = this._inputsArr[i].value[this._inputsArr[i].value.length - 1];
-                        }
 
-                        if ((Number(this._inputsArr[i].id)) < this._inputsKol - 1) {
+                    this._inputsArr[i].value = this._inputsArr[i].value.replace(/[^+\d]/g, '');
+
+                    if (this._inputsArr[i].value !== '') {
+                        if (this._inputsArr[i].value.length > 1) {
+                            if (this._inputsArr[i].value.length > 1) {
+                                if (this._inputsArr[i].value[1] !== this._inputsPrevValues[i]) {
+                                    this._inputsPrevValues[i] = this._inputsArr[i].value[1];
+                                    this._inputsArr[i].value = this._inputsArr[i].value[1];
+                                } else {
+                                    this._inputsPrevValues[i] = this._inputsArr[i].value[0];
+                                    this._inputsArr[i].value = this._inputsArr[i].value[0];
+                                }
+                            }
+    
+                            if (this._inputsArr[i].className === 'phone-module__number-section-input-error') {
+                                this._inputsArr[i].className = 'phone-module__number-section-input';
+                            }
+                        } else {
+                            this._inputsPrevValues[i] = this._inputsArr[i].value;
+                        }
+                        if ((Number(this._inputsArr[i].id)) < this._inputsKol - 1 && this._inputsArr[i].value !== '') {
                             if (this.shadowRoot) {
                                 this._inputsArr[i + 1].focus();
                             }
-                        }
-
-                        if (this._inputsArr[i].className === 'phone-module__number-section-input-error') {
-                            this._inputsArr[i].className = 'phone-module__number-section-input';
-                        }
-                    } else {
-                        if (this._inputsArr[i].value.length >= 2) {
-                            if (!isNaN(Number(this._inputsArr[i].value))) {
-                                this._inputsArr[i].value = this._inputsArr[i].value[0];
-                            } else {
-                                this._inputsArr[i].value = this._inputsArr[i].value[1];
-                            }
-                        } else {
-                            this._inputsArr[i].value = '';
                         }
                     }
                 });

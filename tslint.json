@@ -17,6 +17,8 @@
         "triple-equals": true,
         "use-isnan": true, 
 
+        "prefer-for-of" : false,
+        "max-line-length" : [true, 200],
         "class-name": true, 
         "typedef-whitespace": [false], 
         "quotemark": [false],
