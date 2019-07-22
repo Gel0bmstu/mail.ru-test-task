@@ -12,11 +12,14 @@
   },
   "keywords": [],
   "author": "gel0",
-  "license": "OSI",
+  "license": {
+    "type" : "Apache-2.0",
+    "url" : "https://opensource.org/licenses/apache2.0.php"
+  },
   "repository": {
     "type" : "git",
-    "url" : "https://github.com/Gel0bmstu/mail.ru-test-task"
-  },
+    "url" : "https://github.com/Gel0bmstu/mail.ru-test-task.git"
+  }, 
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@storybook/html": "^5.1.9",
